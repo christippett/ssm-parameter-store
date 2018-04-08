@@ -1,8 +1,11 @@
 import os
-import json
+import logging
 
 import boto3
 from botocore.exceptions import ClientError
+
+
+logger = logging.getLogger(__name__)
 
 
 class EC2ParameterStore:
@@ -23,22 +26,16 @@ class EC2ParameterStore:
         return (key, value)
 
     def get_parameter(self, name, decrypt=True):
-        try:
-            result = self.client.get_parameter(Name=name, WithDecryption=decrypt)
-            p = result['Parameter']
-            return dict([self._extract_parameter(p)])
-        except ClientError:
-            return None
+        result = self.client.get_parameter(Name=name, WithDecryption=decrypt)
+        p = result['Parameter']
+        return dict([self._extract_parameter(p)])
 
     def get_parameters_by_path(self, path, decrypt=True, recursive=True):
         next_token = None
         client_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=recursive)
         parameters = []
         while True:
-            try:
-                result = self.client.get_parameters_by_path(**client_kwargs)
-            except ClientError:
-                break
+            result = self.client.get_parameters_by_path(**client_kwargs)
             parameters += result.get('Parameters')
             next_token = result.get('NextToken')
             if next_token is None:
