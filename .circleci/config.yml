@@ -22,3 +22,9 @@ jobs:
           name: run tests
           environment: TOXENV=py36
           command: tox
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - test_py36
+      - test_py27
