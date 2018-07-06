@@ -6,7 +6,7 @@ jobs:
       - image: circleci/python:3.6
     steps:
       - checkout
-      - run: pip install tox
+      - run: pip install -u tox
       - run:
           name: run tests
           environment:
@@ -18,7 +18,7 @@ jobs:
       - image: circleci/python:2.7
     steps:
       - checkout
-      - run: pip install tox
+      - run: pip install -u tox
       - run:
           name: run tests
           environment:
