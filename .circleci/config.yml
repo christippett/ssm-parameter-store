@@ -3,7 +3,7 @@ jobs:
   test_py36:
     working_directory: ~/ssm_parameter_store
     docker:
-      - image: circleci/python:3.6
+      - image: python:3.6-slim
     steps:
       - checkout
       - run: pip install --user tox
@@ -15,7 +15,7 @@ jobs:
   test_py27:
     working_directory: ~/ssm_parameter_store
     docker:
-      - image: circleci/python:2.7
+      - image: python:2.7-slim
     steps:
       - checkout
       - run: pip install --user tox
