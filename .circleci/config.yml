@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/ssm_parameter_store
+    docker:
+      - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - run:
+          name: install dependencies
+          command: |
+            pip install tox tox-pyenv
+            pyenv local 2.7.9 3.4.3 3.5.0
+      - run:
+          name: run tests
+          command: tox
