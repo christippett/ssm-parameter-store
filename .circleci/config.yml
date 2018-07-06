@@ -10,6 +10,7 @@ jobs:
       - run:
           name: run tests
           environment:
+            AWS_DEFAULT_REGION: us-west-2
             TOXENV: py36
           command: tox
   test_py27:
@@ -22,6 +23,7 @@ jobs:
       - run:
           name: run tests
           environment:
+            AWS_DEFAULT_REGION: us-west-2
             TOXENV: py36
           command: tox
 workflows:
