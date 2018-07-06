@@ -6,7 +6,7 @@ jobs:
       - image: python:3.6-slim
     steps:
       - checkout
-      - run: pip install --user tox
+      - run: pip install tox
       - run:
           name: run tests
           environment:
@@ -18,7 +18,7 @@ jobs:
       - image: python:2.7-slim
     steps:
       - checkout
-      - run: pip install --user tox
+      - run: pip install tox
       - run:
           name: run tests
           environment:
