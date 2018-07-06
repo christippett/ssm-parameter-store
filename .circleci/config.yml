@@ -24,7 +24,7 @@ jobs:
           name: run tests
           environment:
             AWS_DEFAULT_REGION: us-west-2
-            TOXENV: py36
+            TOXENV: py27
           command: tox
 workflows:
   version: 2
