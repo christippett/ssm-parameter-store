@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  tox:
     working_directory: ~/ssm_parameter_store
     docker:
       - image: themattrix/tox
@@ -9,6 +9,25 @@ jobs:
     steps:
       - checkout
       - run: tox
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - .coverage*
+  codecov:
+    docker:
+      - image: python3.6-slim
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - working_directory: /tmp/workspace
       - run: |
           pip install codecov
           codecov
+workflows:
+  version: 2
+  btd:
+    jobs:
+      - tox
+      - codecov:
+          requires:
+            - tox
