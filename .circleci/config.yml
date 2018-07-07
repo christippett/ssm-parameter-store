@@ -19,10 +19,9 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - working_directory: /tmp/workspace
       - run: |
           pip install codecov
-          codecov
+          cd /tmp/workspace && codecov
 workflows:
   version: 2
   btd:
