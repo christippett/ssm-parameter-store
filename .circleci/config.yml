@@ -11,11 +11,13 @@ jobs:
       - attach_workspace:
           at: ~/ssm_parameter_store
       - run: tox
+      - run: |
+          pip install coverage
+          coverage combine
+          coverage xml
       - persist_to_workspace:
           root: .
-          paths:
-            - .coverage*
-            - .tox
+          paths: coverage.xml
   codecov:
     machine:
       enabled: true
@@ -24,10 +26,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/ssm_parameter_store
-      - run: |
-          pip install coverage codecov
-          coverage combine
-          codecov
+      - run: pip install codecov && codecov --file coverage.xml
 workflows:
   version: 2
   btd:
