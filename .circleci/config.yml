@@ -13,7 +13,9 @@ jobs:
       - run: tox
       - persist_to_workspace:
           root: .
-          paths: .coverage*
+          paths:
+            - .coverage*
+            - .tox
   codecov:
     machine:
       enabled: true
