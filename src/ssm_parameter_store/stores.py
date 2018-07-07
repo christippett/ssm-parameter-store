@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 class EC2ParameterStore:
-    def __init__(self):
-        self.client = boto3.client('ssm')
+    def __init__(self, **client_kwargs):
+        self.client = boto3.client('ssm', **client_kwargs)
         self.path_delimiter = '/'
 
     @classmethod
@@ -18,16 +18,16 @@ class EC2ParameterStore:
         for k, v in parameter_dict.items():
             os.environ.setdefault(k, v)
 
-    def _get_paginated_parameters(self, client_method, strip_path=True, **client_kwargs):
+    def _get_paginated_parameters(self, client_method, strip_path=True, **get_kwargs):
         next_token = None
         parameters = []
         while True:
-            result = client_method(**client_kwargs)
+            result = client_method(**get_kwargs)
             parameters += result.get('Parameters')
             next_token = result.get('NextToken')
             if next_token is None:
                 break
-            client_kwargs.update({'NextToken': next_token})
+            get_kwargs.update({'NextToken': next_token})
         return dict(self.extract_parameter(p, strip_path=strip_path) for p in parameters)
 
     def extract_parameter(self, parameter, strip_path=False):
@@ -44,17 +44,17 @@ class EC2ParameterStore:
         return dict([self.extract_parameter(p, strip_path=strip_path)])
 
     def get_parameters(self, names, decrypt=True, strip_path=True):
-        client_kwargs = dict(Names=names, WithDecryption=decrypt)
+        get_kwargs = dict(Names=names, WithDecryption=decrypt)
         return self._get_paginated_parameters(
             client_method=self.client.get_parameters,
             strip_path=strip_path,
-            **client_kwargs
+            **get_kwargs
         )
 
     def get_parameters_by_path(self, path, decrypt=True, recursive=True, strip_path=True):
-        client_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=recursive)
+        get_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=recursive)
         return self._get_paginated_parameters(
             client_method=self.client.get_parameters_by_path,
             strip_path=strip_path,
-            **client_kwargs
+            **get_kwargs
         )
