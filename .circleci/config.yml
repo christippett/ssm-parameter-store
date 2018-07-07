@@ -23,7 +23,8 @@ jobs:
       - attach_workspace:
           at: ~/ssm_parameter_store
       - run: |
-          pip install codecov
+          pip install coverage codecov
+          coverage combine
           codecov
 workflows:
   version: 2
