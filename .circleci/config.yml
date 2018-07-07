@@ -1,27 +1,27 @@
 version: 2
 jobs:
   tox:
-    working_directory: ~/ssm_parameter_store
     docker:
       - image: themattrix/tox
     environment:
       AWS_DEFAULT_REGION: "us-west-2"
+    working_directory: ~/ssm_parameter_store
     steps:
       - checkout
       - run: tox
       - persist_to_workspace:
-          root: ./
-          paths:
-            - .coverage*
+          root: .
+          paths: .coverage*
   codecov:
-    docker:
-      - image: python:3.6-slim
+    machine:
+      enabled: true
+    working_directory: ~/ssm_parameter_store
     steps:
       - attach_workspace:
-          at: /tmp/workspace
+          at: ~/ssm_parameter_store
       - run: |
           pip install codecov
-          cd /tmp/workspace && codecov
+          codecov
 workflows:
   version: 2
   btd:
