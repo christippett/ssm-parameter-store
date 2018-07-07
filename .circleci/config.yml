@@ -15,7 +15,7 @@ jobs:
             - .coverage*
   codecov:
     docker:
-      - image: python3.6-slim
+      - image: python:3.6-slim
     steps:
       - attach_workspace:
           at: /tmp/workspace
