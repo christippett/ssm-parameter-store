@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test:
+  build:
     working_directory: ~/ssm_parameter_store
     docker:
       - image: themattrix/tox
