@@ -8,6 +8,8 @@ jobs:
     working_directory: ~/ssm_parameter_store
     steps:
       - checkout
+      - attach_workspace:
+          at: ~/ssm_parameter_store
       - run: tox
       - persist_to_workspace:
           root: .
@@ -17,6 +19,7 @@ jobs:
       enabled: true
     working_directory: ~/ssm_parameter_store
     steps:
+      - checkout
       - attach_workspace:
           at: ~/ssm_parameter_store
       - run: |
