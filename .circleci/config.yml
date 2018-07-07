@@ -9,3 +9,6 @@ jobs:
     steps:
       - checkout
       - run: tox
+      - run: |
+          pip install codecov
+          codecov
