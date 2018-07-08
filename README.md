@@ -1,7 +1,7 @@
 SSM Parameter Store
 =============================================================
 
-![PyPI version](https://img.shields.io/pypi/v/ssm-parameter-store.svg)
+[![PyPI version](https://img.shields.io/pypi/v/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
 [![Build status](https://img.shields.io/travis/christippett/ssm-parameter-store.svg)](https://travis-ci.org/christippett/ssm-parameter-store)
 [![Coverage](https://img.shields.io/coveralls/github/christippett/ssm-parameter-store.svg)](https://coveralls.io/github/christippett/ssm-parameter-store?branch=master)
 [![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
