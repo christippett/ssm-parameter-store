@@ -1,4 +1,4 @@
-Simple Python wrapper for AWS Systems Manager Parameter Store
+Simple Python wrapper for getting values from AWS Systems Manager Parameter Store
 =============================================================
 
 .. image:: https://img.shields.io/travis/christippett/ssm-parameter-store.svg
