@@ -1,16 +1,26 @@
-Simple Python wrapper for getting values from AWS Systems Manager
-Parameter Store
+SSM Parameter Store
 =============================================================
 
+![PyPI version](https://img.shields.io/pypi/v/ssm-parameter-store.svg)
 [![Build status](https://img.shields.io/travis/christippett/ssm-parameter-store.svg)](https://travis-ci.org/christippett/ssm-parameter-store)
 [![Coverage](https://img.shields.io/coveralls/github/christippett/ssm-parameter-store.svg)](https://coveralls.io/github/christippett/ssm-parameter-store?branch=master)
-[![Github license](https://img.shields.io/github/license/christippett/ssm-parameter-store.svg)](https://github.com/christippett/ssm-parameter-store)
 [![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
+[![Github license](https://img.shields.io/github/license/christippett/ssm-parameter-store.svg)](https://github.com/christippett/ssm-parameter-store)
+
+Description
+===========
+
+This is a simple Python wrapper for getting values from AWS Systems Manager
+Parameter Store.
+
+The module supports getting a single parameter, multiple parameters or all parameters matching a particular path.
+
+All parameters are returned as a Python `dict`.
 
 Installation
 ============
 
-Install the module with `pip`:
+Install with `pip`:
 
 ``` bash
 pip install ssm-parameter-store
@@ -19,29 +29,124 @@ pip install ssm-parameter-store
 Usage
 =====
 
-All parameters are returned as a Python `dict`.
-
-Getting a single parameter
---------------------------
+Assuming the following parameters:
 
 ``` bash
-aws ssm put-parameter \
---name "my_parameter_name" \
---value "value" \
---type SecureString
---region us-west-2
+# set default AWS region
+AWS_DEFAULT_REGION=us-west-2
+
+# add parameters
+aws ssm put-parameter --name "param1" --value "value1" --type SecureString
+aws ssm put-parameter --name "param2" --value "value2" --type SecureString
+
+# add parameters organised by hierarchy
+aws ssm put-parameter --name "/dev/app/secret" --value "dev_secret" --type SecureString
+aws ssm put-parameter --name "/dev/db/postgres_username" --value "dev_username" --type SecureString
+aws ssm put-parameter --name "/dev/db/postgres_password" --value "dev_password" --type SecureString
+aws ssm put-parameter --name "/prod/app/secret" --value "prod_secret" --type SecureString
+aws ssm put-parameter --name "/prod/db/postgres_username" --value "prod_username" --type SecureString
+aws ssm put-parameter --name "/prod/db/postgres_password" --value "prod_password" --type SecureString
 ```
+
+Get a single parameter
+----------------------
 
 ``` python
 from ssm_parameter_store import EC2ParameterStore
 store = EC2ParameterStore(region='us-west-2')
-parameter = store.get_parameter('my_parameter_name', decrypt=True)
-# parameter = {
-#   'my_parameter_name': 'value'
-# }
+parameter = store.get_parameter('param1', decrypt=True)
+
+assert parameter == {
+   'param1': 'value1'
+}
 ```
 
-Credentials
+Get a multiple parameters
+-------------------------
+
+``` python
+from ssm_parameter_store import EC2ParameterStore
+store = EC2ParameterStore(region='us-west-2')
+parameters = store.get_parameters(['param1', 'param2'])
+
+assert parameters == {
+   'param1': 'value1',
+   'param2': 'value2',
+}
+```
+
+Get parameters by path
+----------------------
+
+``` python
+from ssm_parameter_store import EC2ParameterStore
+store = EC2ParameterStore(region='us-west-2')
+parameters = store.get_parameters_by_path('/dev/', recursive=True)
+
+assert parameters == {
+    'secret': 'dev_secret',
+    'postgres_username': 'dev_username',
+    'postgres_password': 'dev_password',
+}
+```
+
+By default `get_parameters_by_path` strips the path from each parameter name. To return a parameter's full name, set `strip_path` to `False`.
+
+``` python
+from ssm_parameter_store import EC2ParameterStore
+store = EC2ParameterStore(region='us-west-2')
+parameters = store.get_parameters_by_path('/dev/', strip_path=False, recursive=True)
+
+assert parameters == {
+    '/dev/app/secret': 'dev_secret',
+    '/dev/db/postgres_username': 'dev_username',
+    '/dev/db/postgres_password': 'dev_password'
+}
+```
+
+Populating Environment Variables
+================================
+
+The module includes a static method on `EC2ParameterStore` to help populate environment variables. This can be helpful when integrating with a library like [`django-environ`](https://github.com/joke2k/django-environ).
+
+For example:
+
+```bash
+aws ssm put-parameter --name "/prod/django/SECRET_KEY" --value "-$y_^@69bm69+z!fawbdf=h_10+zjzfwr8_c=$$&j@-%p$%ct^" --type SecureString
+aws ssm put-parameter --name "/prod/django/DATABASE_URL" --value "psql://user:pass@db-prod.xyz123.us-west-2.rds.amazonaws.com:5432/db" --type SecureString
+aws ssm put-parameter --name "/prod/django/REDIS_URL" --value "redis://redis-prod.edc1ba.0001.usw2.cache.amazonaws.com:6379" --type SecureString
+```
+
+```python
+import environ
+from ssm_parameter_manager import EC2ParameterStore
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Get parameters and populate os.environ (region not required if AWS_DEFAULT_REGION environment variable set)
+parameter_store = EC2ParameterStore(region='us-west-2')
+django_parameters = parameter_store.get_parameters_by_path('/prod/django/', strip_path=True)
+EC2ParameterStore.set_env(django_parameters)
+
+# False if not in os.environ
+DEBUG = env('DEBUG')
+
+# Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
+SECRET_KEY = env('SECRET_KEY')
+
+DATABASES = {
+    # read os.environ['DATABASE_URL'] and raises ImproperlyConfigured exception if not found
+    'default': env.db(),
+}
+
+CACHES = {
+    'default': env.cache('REDIS_URL'),
+}
+```
+
+AWS Credentials
 ===========
 
 `ssm-parameter-store` uses `boto3` under the hood and therefore inherits
@@ -49,11 +154,11 @@ the same mechanism for looking up AWS credentials. See [configuring
 credentials](https://boto3.readthedocs.io/en/latest/guide/configuration.html#configuring-credentials)
 in the Boto 3 documentation for more information.
 
-Example: Method parameters
---------------------------
 
-Pass all `boto3` client parameters to the `EC2ParameterStore`
-constructor.
+
+`EC2ParameterStore` accepts all `boto3` client parameters as keyword arguments.
+
+For example:
 
 ``` python
 from ssm_parameter_store import EC2ParameterStore
