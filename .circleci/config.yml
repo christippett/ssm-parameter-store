@@ -11,14 +11,9 @@ jobs:
       - attach_workspace:
           at: ~/ssm_parameter_store
       - run: tox
-      - run: |
-          pip install coverage
-          coverage combine
-          coverage xml
       - persist_to_workspace:
           root: .
           paths:
-            - coverage.xml
             - .coverage
   codecov:
     machine:
