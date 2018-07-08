@@ -17,6 +17,7 @@ setup(
     license='MIT',
     package_dir={'': 'src'},
     packages=find_packages('src'),
+    install_requires=['boto3'],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
