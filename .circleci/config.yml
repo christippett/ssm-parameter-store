@@ -17,7 +17,9 @@ jobs:
           coverage xml
       - persist_to_workspace:
           root: .
-          paths: coverage.xml
+          paths:
+            - coverage.xml
+            - .coverage
   codecov:
     machine:
       enabled: true
@@ -26,7 +28,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/ssm_parameter_store
-      - run: pip install codecov && codecov --file coverage.xml
+      - run: pip install coveralls && coveralls
 workflows:
   version: 2
   btd:
