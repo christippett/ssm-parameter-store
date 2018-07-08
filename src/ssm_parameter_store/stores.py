@@ -13,7 +13,7 @@ class EC2ParameterStore:
         self.client = boto3.client('ssm', **client_kwargs)
         self.path_delimiter = '/'
 
-    @classmethod
+    @staticmethod
     def set_env(cls, parameter_dict):
         for k, v in parameter_dict.items():
             os.environ.setdefault(k, v)
