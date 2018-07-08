@@ -26,6 +26,6 @@ deploy:
     condition: $TOXENV == py36
     tags: true # only deploy on tagged commits
     branch: master
-    repo: christippett/ssm_parameter_store
+    repo: christippett/ssm-parameter-store
 notifications:
   email: false
