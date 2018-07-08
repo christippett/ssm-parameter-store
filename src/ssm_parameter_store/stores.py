@@ -14,7 +14,7 @@ class EC2ParameterStore:
         self.path_delimiter = '/'
 
     @staticmethod
-    def set_env(cls, parameter_dict):
+    def set_env(parameter_dict):
         for k, v in parameter_dict.items():
             os.environ.setdefault(k, v)
 
