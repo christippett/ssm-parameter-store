@@ -30,7 +30,7 @@ class EC2ParameterStore:
             get_kwargs.update({'NextToken': next_token})
         return dict(self.extract_parameter(p, strip_path=strip_path) for p in parameters)
 
-    def extract_parameter(self, parameter, strip_path=False):
+    def extract_parameter(self, parameter, strip_path=True):
         key = parameter['Name']
         if strip_path:
             key_parts = key.split(self.path_delimiter)
