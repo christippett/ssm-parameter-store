@@ -1,14 +1,15 @@
 from setuptools import setup, find_packages
 
 
-LONG_DESCRIPTION = open('README.rst').read()
+LONG_DESCRIPTION = open('README.md').read()
 
 
 setup(
     name='ssm-parameter-store',
-    version='0.1',
+    version='0.1.2',
     description='Simple Python wrapper for getting values from AWS Systems Manager Parameter Store',
     long_description=LONG_DESCRIPTION,
+    long_description_content_type='text/markdown',
     url='http://github.com/christippett/ssm-parameter-store',
     author='Chris Tippett',
     author_email='chris@spoon.nz',
