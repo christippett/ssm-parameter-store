@@ -119,7 +119,7 @@ aws ssm put-parameter --name "/prod/django/REDIS_URL" --value "redis://redis-pro
 
 ```python
 import environ
-from ssm_parameter_manager import EC2ParameterStore
+from ssm_parameter_store import EC2ParameterStore
 
 env = environ.Env(
     DEBUG=(bool, False)
