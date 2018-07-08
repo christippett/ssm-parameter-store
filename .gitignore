@@ -3,6 +3,8 @@
 .tox
 .coverage
 .coverage.*
+coverage.xml
+.coveralls.yml
 .eggs
 .cache
 .pytest_cache
