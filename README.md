@@ -169,3 +169,12 @@ store = EC2ParameterStore(
     region='us-west-2'
 )
 ```
+
+Related Projects
+================
+
+- **[param-store](https://github.com/LabD/python-param-store)** – 
+Python module to store secrets in secret stores
+- **[ssm-cache](https://github.com/alexcasalboni/ssm-cache-python)** –
+AWS System Manager Parameter Store caching client for Python
+
