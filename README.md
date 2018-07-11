@@ -7,7 +7,7 @@ SSM Parameter Store
 [![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
 [![Github license](https://img.shields.io/github/license/christippett/ssm-parameter-store.svg)](https://github.com/christippett/ssm-parameter-store)
 
-Description
+Description [¶](#description)
 ===========
 
 This is a simple Python wrapper for getting values from AWS Systems Manager
@@ -17,7 +17,7 @@ The module supports getting a single parameter, multiple parameters or all param
 
 All parameters are returned as a Python `dict`.
 
-Installation
+Installation [¶](#installation)
 ============
 
 Install with `pip`:
@@ -26,10 +26,44 @@ Install with `pip`:
 pip install ssm-parameter-store
 ```
 
-Usage
+Usage [¶](#usage)
 =====
 
-Assuming the following parameters:
+Import the module and create a new instance of `EC2ParameterStore`.
+
+```python
+from ssm_parameter_store import EC2ParameterStore
+
+store = EC2ParameterStore()
+```
+
+AWS Credentials
+---------------
+
+`ssm-parameter-store` uses `boto3` under the hood and therefore inherits
+the same mechanism for looking up AWS credentials. See [configuring
+credentials](https://boto3.readthedocs.io/en/latest/guide/configuration.html#configuring-credentials)
+in the Boto 3 documentation for more information.
+
+`EC2ParameterStore` accepts all `boto3` client parameters as keyword arguments.
+
+For example:
+
+``` python
+from ssm_parameter_store import EC2ParameterStore
+
+store = EC2ParameterStore(
+    aws_access_key_id=ACCESS_KEY,
+    aws_secret_access_key=SECRET_KEY,
+    aws_session_token=SESSION_TOKEN,  # optional
+    region='us-west-2'
+)
+```
+
+Examples [¶](#examples)
+=======================
+
+Given the following parameters:
 
 ``` bash
 # set default AWS region
@@ -48,12 +82,11 @@ aws ssm put-parameter --name "/prod/db/postgres_username" --value "prod_username
 aws ssm put-parameter --name "/prod/db/postgres_password" --value "prod_password" --type SecureString
 ```
 
+
 Get a single parameter
 ----------------------
 
 ``` python
-from ssm_parameter_store import EC2ParameterStore
-store = EC2ParameterStore(region='us-west-2')
 parameter = store.get_parameter('param1', decrypt=True)
 
 assert parameter == {
@@ -65,8 +98,6 @@ Get a multiple parameters
 -------------------------
 
 ``` python
-from ssm_parameter_store import EC2ParameterStore
-store = EC2ParameterStore(region='us-west-2')
 parameters = store.get_parameters(['param1', 'param2'])
 
 assert parameters == {
@@ -79,8 +110,6 @@ Get parameters by path
 ----------------------
 
 ``` python
-from ssm_parameter_store import EC2ParameterStore
-store = EC2ParameterStore(region='us-west-2')
 parameters = store.get_parameters_by_path('/dev/', recursive=True)
 
 assert parameters == {
@@ -93,8 +122,6 @@ assert parameters == {
 By default `get_parameters_by_path` strips the path from each parameter name. To return a parameter's full name, set `strip_path` to `False`.
 
 ``` python
-from ssm_parameter_store import EC2ParameterStore
-store = EC2ParameterStore(region='us-west-2')
 parameters = store.get_parameters_by_path('/dev/', strip_path=False, recursive=True)
 
 assert parameters == {
@@ -104,12 +131,14 @@ assert parameters == {
 }
 ```
 
-Populating Environment Variables
+Populating Environment Variables [¶](#populating-environment-variables)
 ================================
 
 The module includes a static method on `EC2ParameterStore` to help populate environment variables. This can be helpful when integrating with a library like [`django-environ`](https://github.com/joke2k/django-environ).
 
-For example:
+Example
+-------
+Given the following parameters:
 
 ```bash
 aws ssm put-parameter --name "/prod/django/SECRET_KEY" --value "-$y_^@69bm69+z!fawbdf=h_10+zjzfwr8_c=$$&j@-%p$%ct^" --type SecureString
@@ -146,31 +175,7 @@ CACHES = {
 }
 ```
 
-AWS Credentials
-===========
-
-`ssm-parameter-store` uses `boto3` under the hood and therefore inherits
-the same mechanism for looking up AWS credentials. See [configuring
-credentials](https://boto3.readthedocs.io/en/latest/guide/configuration.html#configuring-credentials)
-in the Boto 3 documentation for more information.
-
-
-
-`EC2ParameterStore` accepts all `boto3` client parameters as keyword arguments.
-
-For example:
-
-``` python
-from ssm_parameter_store import EC2ParameterStore
-store = EC2ParameterStore(
-    aws_access_key_id=ACCESS_KEY,
-    aws_secret_access_key=SECRET_KEY,
-    aws_session_token=SESSION_TOKEN,  # optional
-    region='us-west-2'
-)
-```
-
-Related Projects
+Related Projects [¶](#related-projects)
 ================
 
 - **[param-store](https://github.com/LabD/python-param-store)** – 
