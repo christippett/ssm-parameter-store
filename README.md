@@ -7,7 +7,7 @@ SSM Parameter Store
 [![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
 [![Github license](https://img.shields.io/github/license/christippett/ssm-parameter-store.svg)](https://github.com/christippett/ssm-parameter-store)
 
-Description [¶](#description)
+Description
 ===========
 
 This is a simple Python wrapper for getting values from AWS Systems Manager
@@ -17,7 +17,7 @@ The module supports getting a single parameter, multiple parameters or all param
 
 All parameters are returned as a Python `dict`.
 
-Installation [¶](#installation)
+Installation
 ============
 
 Install with `pip`:
@@ -26,7 +26,7 @@ Install with `pip`:
 pip install ssm-parameter-store
 ```
 
-Usage [¶](#usage)
+Usage
 =====
 
 Import the module and create a new instance of `EC2ParameterStore`.
@@ -60,8 +60,8 @@ store = EC2ParameterStore(
 )
 ```
 
-Examples [¶](#examples)
-=======================
+Examples
+========
 
 Given the following parameters:
 
@@ -131,7 +131,7 @@ assert parameters == {
 }
 ```
 
-Populating Environment Variables [¶](#populating-environment-variables)
+Populating Environment Variables
 ================================
 
 The module includes a static method on `EC2ParameterStore` to help populate environment variables. This can be helpful when integrating with a library like [`django-environ`](https://github.com/joke2k/django-environ).
@@ -175,7 +175,7 @@ CACHES = {
 }
 ```
 
-Related Projects [¶](#related-projects)
+Related Projects
 ================
 
 - **[param-store](https://github.com/LabD/python-param-store)** – 
