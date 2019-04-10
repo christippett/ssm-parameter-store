@@ -56,7 +56,7 @@ store = EC2ParameterStore(
     aws_access_key_id=ACCESS_KEY,
     aws_secret_access_key=SECRET_KEY,
     aws_session_token=SESSION_TOKEN,  # optional
-    region='us-west-2'
+    region_name='us-west-2'
 )
 ```
 
@@ -155,7 +155,7 @@ env = environ.Env(
 )
 
 # Get parameters and populate os.environ (region not required if AWS_DEFAULT_REGION environment variable set)
-parameter_store = EC2ParameterStore(region='us-west-2')
+parameter_store = EC2ParameterStore(region_name='us-west-2')
 django_parameters = parameter_store.get_parameters_by_path('/prod/django/', strip_path=True)
 EC2ParameterStore.set_env(django_parameters)
 
