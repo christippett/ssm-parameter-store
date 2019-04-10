@@ -10,6 +10,7 @@ coverage.xml
 .pytest_cache
 .python-version
 .venv
+venv/
 .idea/
 
 /build/
