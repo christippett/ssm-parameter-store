@@ -1,9 +1,7 @@
-import os
 import logging
+import os
 
 import boto3
-from botocore.exceptions import ClientError
-
 
 logger = logging.getLogger(__name__)
 
@@ -58,3 +56,32 @@ class EC2ParameterStore:
             strip_path=strip_path,
             **get_kwargs
         )
+
+    def get_parameters_with_hierarchy(self, path, decrypt=True, strip_path=True):
+        """Recursively get all parameters under path, keeping the hierarchy
+        as a structure of nested dictionaries.
+        """
+        # Get a flat dictionary
+        get_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=True)
+        flat = self._get_paginated_parameters(
+            client_method=self.client.get_parameters_by_path,
+            strip_path=False,
+            **get_kwargs
+        )
+
+        # Convert to a nested dictionary and strip leading path component
+        result = {}
+
+        for key, value in flat.items():
+            if strip_path:
+                key = key[len(path):]
+            if key and key[0] == "/":
+                key = key[1:]
+
+            leafdict = result
+            key_segments = key.split("/")
+            for key_segment in key_segments[:-1]:
+                leafdict = leafdict.setdefault(key_segment, {})
+            leafdict[key_segments[-1]] = value
+
+        return result

@@ -94,8 +94,8 @@ assert parameter == {
 }
 ```
 
-Get a multiple parameters
--------------------------
+Get multiple parameters
+-----------------------
 
 ``` python
 parameters = store.get_parameters(['param1', 'param2'])
@@ -130,6 +130,44 @@ assert parameters == {
     '/dev/db/postgres_password': 'dev_password'
 }
 ```
+
+Get parameters with original hierarchy
+--------------------------------------
+You can also get parameters by path, but in a nested structure that models the path hierarchy.
+
+``` python
+parameters = store.get_parameters_with_hierarchy('/dev/')
+
+assert parameters == {
+    'app': {
+        'secret': 'dev_secret',
+    },
+    'db': {
+        'postgres_username': 'dev_username',
+        'postgres_password': 'dev_password',
+    },
+}
+```
+
+By default `get_parameters_with_hierarchy` strips the leading path component. To return the selected parameters
+with the full hierarchy, set `strip_path` to `False`.
+
+``` python
+parameters = store.get_parameters_with_hierarchy('/dev/', strip_path=False)
+
+assert parameters == {
+    'dev': {
+        'app': {
+            'secret': 'dev_secret',
+        },
+        'db': {
+            'postgres_username': 'dev_username',
+            'postgres_password': 'dev_password',
+        },
+    },
+}
+```
+
 
 Populating Environment Variables
 ================================

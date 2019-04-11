@@ -92,3 +92,37 @@ def test_stripping_path_in_parameter(parameter_store):
 
     stripped_parameter_keys = parameter_store.get_parameter('key', strip_path=True)
     assert stripped_parameter_keys.get('key')
+
+
+def test_get_parameters_with_hierarchy(parameter_store):
+    expected_result = {
+        'third-key': 'danger',
+        'fourth-key': 'will',
+        'another': {
+            'key': {
+                'fifth-key': 'robinson',
+            },
+        },
+    }
+
+    parameter_keys = parameter_store.get_parameters_with_hierarchy('/path/to', strip_path=True)
+    assert parameter_keys == expected_result
+
+    parameter_keys = parameter_store.get_parameters_with_hierarchy('/path/to', strip_path=False)
+    assert parameter_keys == {
+        'path': {
+            'to': expected_result,
+        },
+    }
+
+
+def test_get_parameters_with_hierarchy_for_path_with_no_nesting(parameter_store):
+    parameter_keys = parameter_store.get_parameters_with_hierarchy('/path/to/another/key/', strip_path=True)
+
+    assert len(parameter_keys) == 1
+    assert parameter_keys.get('fifth-key')
+
+
+def test_get_parameters_with_hierarchy_for_nonexistent_path(parameter_store):
+    parameter_keys = parameter_store.get_parameters_with_hierarchy('/does/not/exist', strip_path=True)
+    assert len(parameter_keys) == 0
