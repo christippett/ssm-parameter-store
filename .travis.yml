@@ -1,5 +1,4 @@
 language: python
-sudo: false
 python:
   - 2.7
   - 3.4
@@ -12,6 +11,8 @@ env:
   global:
     - AWS_DEFAULT_REGION=us-west-2
     - BOTO_CONFIG=/dev/null
+before_install:
+  - sudo rm -f /etc/boto.cfg # https://github.com/travis-ci/travis-ci/issues/7940
 install:
   - pip install tox coveralls
 script:
