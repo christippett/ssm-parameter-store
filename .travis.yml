@@ -10,6 +10,7 @@ python:
   - pypy3
 env:
   - AWS_DEFAULT_REGION=us-west-2
+  - BOTO_CONFIG=/dev/null
 install:
   - pip install tox coveralls
 script:
