@@ -32,7 +32,8 @@ def parameter_store(fake_ssm):
 def test_extract_parameter_returns_key_pair_tuple(parameter_store):
     parameter = {
         'Name': 'key',
-        'Value': 'hello'
+        'Value': 'hello',
+        'Type': 'SecureString'
     }
     extracted_parameter = parameter_store.extract_parameter(parameter)
     assert isinstance(extracted_parameter, tuple)
