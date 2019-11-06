@@ -19,6 +19,7 @@ def parameter_store(fake_ssm):
     ssm = boto3.client('ssm')
     ssm.put_parameter(Name='key', Value='hello', Type='SecureString')
     ssm.put_parameter(Name='second-key', Value='world', Type='String')
+    ssm.put_parameter(Name='list-key', Value='hello,world', Type='StringList')
     ssm.put_parameter(Name='/path/to/third-key', Value='danger', Type='SecureString')
     ssm.put_parameter(Name='/path/to/fourth-key', Value='will', Type='SecureString')
     ssm.put_parameter(Name='/path/to/another/key/fifth-key', Value='robinson', Type='String')
@@ -31,7 +32,8 @@ def parameter_store(fake_ssm):
 def test_extract_parameter_returns_key_pair_tuple(parameter_store):
     parameter = {
         'Name': 'key',
-        'Value': 'hello'
+        'Value': 'hello',
+        'Type': 'SecureString'
     }
     extracted_parameter = parameter_store.extract_parameter(parameter)
     assert isinstance(extracted_parameter, tuple)
@@ -60,12 +62,14 @@ def test_get_parameter(parameter_store):
 
 
 def test_get_parameters(parameter_store):
-    parameter_keys = parameter_store.get_parameters(['key', 'second-key'])
-    assert len(parameter_keys) == 2
+    parameter_keys = parameter_store.get_parameters(['key', 'second-key', 'list-key'])
+    assert len(parameter_keys) == 3
     assert 'key' in parameter_keys.keys()
     assert 'second-key' in parameter_keys.keys()
+    assert 'list-key' in parameter_keys.keys()
     assert parameter_keys.get('key') == 'hello'
     assert parameter_keys.get('second-key') == 'world'
+    assert parameter_keys.get('list-key') == ['hello', 'world']
 
 
 def test_get_parameters_by_path(parameter_store):

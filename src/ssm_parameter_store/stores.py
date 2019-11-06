@@ -34,6 +34,8 @@ class EC2ParameterStore:
             key_parts = key.split(self.path_delimiter)
             key = key_parts[-1]
         value = parameter['Value']
+        if parameter['Type'] == 'StringList':
+            value = value.split(',')
         return (key, value)
 
     def get_parameter(self, name, decrypt=True, strip_path=True):
