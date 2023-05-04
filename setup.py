@@ -13,7 +13,7 @@ setup(
     long_description_content_type='text/markdown',
     url='http://github.com/christippett/ssm-parameter-store',
     author='Chris Tippett',
-    author_email='chris@spoon.nz',
+    author_email='git@christippett.dev',
     license='MIT',
     package_dir={'': 'src'},
     packages=find_packages('src'),
