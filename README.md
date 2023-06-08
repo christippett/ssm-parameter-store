@@ -26,6 +26,11 @@ Install with `pip`:
 pip install ssm-parameter-store
 ```
 
+Install with `pip3` for Python 3:
+
+``` bash
+pip3 install ssm-parameter-store
+```
 Usage
 =====
 
@@ -212,6 +217,37 @@ CACHES = {
     'default': env.cache('REDIS_URL'),
 }
 ```
+
+Example
+-------
+Read parameters from SSM Parameter store prefixes and set as OS env variables
+
+Use case: populate environment variables/secrets  from ssm parameter store dynamically and set all inside a k8s pod.
+You can create en entrypoint.sh to call this codes then call the actual command.
+
+```
+import os
+import json
+from ssm_parameter_store import EC2ParameterStore
+
+# Read /myapp/dev and /myapp/common from SSM to set all variables
+os.environ['SSM_PATHS'] = '["/myapp/dev", "/myapp/common"]'
+print(json.loads(os.environ.get('SSM_PATHS')))
+
+parameter_store = EC2ParameterStore()
+for p in json.loads(os.environ.get('SSM_PATHS')):
+    print(p)
+
+    parameters = parameter_store.get_parameters_by_path(p , recursive=True)
+
+    EC2ParameterStore.set_env(parameters)
+
+# print all OS env to verify env
+for k, v in os.environ.items():
+    print(f'{k}={v}')   
+
+```
+
 
 Related Projects
 ================
