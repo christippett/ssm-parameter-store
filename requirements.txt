@@ -1,8 +1,0 @@
-boto3
-
-# Test dependencies
-moto
-pytest
-coverage
-pytest-cov
-tox
