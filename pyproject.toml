@@ -1,14 +1,14 @@
 [project]
 name = "ssm-parameter-store"
-version = "0.1.0"
+version = "26.8.0-alpha"
 description = "Add your description here"
 readme = "README.md"
 authors = [
     { name = "Chris Tippett", email = "git@christippett.dev" }
 ]
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
-    "boto3",
+    "boto3>=1.43.81",
     "setuptools>=84.0.0",
 ]
 
@@ -26,5 +26,5 @@ dev = [
     "pytest-cov>=7.1.0",
     "ruff>=0.16.4",
     "setuptools>=84.0.0",
-    "tox>=4.60.1",
+    "tox>=4.60.1"
 ]
