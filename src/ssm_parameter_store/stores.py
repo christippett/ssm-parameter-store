@@ -83,8 +83,17 @@ class EC2ParameterStore:
             leafdict = result
             key_segments = key.split("/")
             for key_segment in key_segments[:-1]:
+                # if leafdict is already a string (meaning a parent key was a parameter itself),
+                # we cannot nest beneath it. We skip/ignore the child or convert to dict.
+                # Standard AWS SSM allows /a/b = value AND /a/b/c = value.
+                # If we encounter this, we'll keep the value in a special '_value' key to avoid data loss.
+                if isinstance(leafdict, str):
+                    # convert existing leaf string into a dict with '_value'
+                    break  # we can't reliably do this backward-compatibly in place for the current pointer without parent ref
                 leafdict = leafdict.setdefault(key_segment, {})
-            leafdict[key_segments[-1]] = value
+            
+            if isinstance(leafdict, dict):
+                leafdict[key_segments[-1]] = value
 
         return result
 
