@@ -1,6 +1,6 @@
 import boto3
 import pytest
-from moto import mock_ssm
+from moto import mock_aws
 
 from ssm_parameter_store import EC2ParameterStore
 
@@ -8,7 +8,7 @@ from ssm_parameter_store import EC2ParameterStore
 @pytest.fixture
 def fake_ssm():
     """Provide a consistent faked SSM context for running an entire test case."""
-    with mock_ssm():
+    with mock_aws():
         yield None
 
 
@@ -24,8 +24,8 @@ def parameter_store(fake_ssm):
     ssm.put_parameter(Name='/path/to/fourth-key', Value='will', Type='SecureString')
     ssm.put_parameter(Name='/path/to/another/key/fifth-key', Value='robinson', Type='String')
     # Generate more than 10 parameters to test limit of 10 parameters per response
-    for n in range(0, 20):
-        ssm.put_parameter(Name='/test/path/{}'.format(n), Value='{}'.format(n), Type='SecureString')
+    for n in range(20):
+        ssm.put_parameter(Name=f'/test/path/{n}', Value=f'{n}', Type='SecureString')
     return EC2ParameterStore()
 
 
@@ -46,7 +46,7 @@ def test_get_paginated_parameters(parameter_store):
         - additional keys can be requested by passing
         NextToken in subsequent requests.
     """
-    client_kwargs = dict(Path='/test/path/')
+    client_kwargs = {'Path': '/test/path/'}
     parameter_keys = parameter_store._get_paginated_parameters(
         client_method=boto3.client('ssm').get_parameters_by_path,
         **client_kwargs
@@ -57,16 +57,16 @@ def test_get_paginated_parameters(parameter_store):
 def test_get_parameter(parameter_store):
     parameter_keys = parameter_store.get_parameter('key')
     assert len(parameter_keys) == 1
-    assert 'key' in parameter_keys.keys()
+    assert 'key' in parameter_keys
     assert parameter_keys.get('key') == 'hello'
 
 
 def test_get_parameters(parameter_store):
     parameter_keys = parameter_store.get_parameters(['key', 'second-key', 'list-key'])
     assert len(parameter_keys) == 3
-    assert 'key' in parameter_keys.keys()
-    assert 'second-key' in parameter_keys.keys()
-    assert 'list-key' in parameter_keys.keys()
+    assert 'key' in parameter_keys
+    assert 'second-key' in parameter_keys
+    assert 'list-key' in parameter_keys
     assert parameter_keys.get('key') == 'hello'
     assert parameter_keys.get('second-key') == 'world'
     assert parameter_keys.get('list-key') == ['hello', 'world']

@@ -1,0 +1,30 @@
+[project]
+name = "ssm-parameter-store"
+version = "26.8.0-alpha"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Chris Tippett", email = "git@christippett.dev" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "boto3>=1.43.81",
+    "setuptools>=84.0.0",
+]
+
+[project.scripts]
+ssm-parameter-store = "ssm_parameter_store:main"
+
+[build-system]
+requires = ["uv_build>=0.12.1,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "coveralls>=4.1.0",
+    "moto>=5.2.3",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.4",
+    "setuptools>=84.0.0",
+]
