@@ -18,19 +18,19 @@ jobs:
       id-token: write
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v10.0.1
         with:
           enable-cache: true
       - name: Set dynamic version
         run: |
           # Format: YY.M.n where n increments
           PREFIX=$(date +'%y.%-m')
-          
+
           # Find latest tag matching this prefix
           LATEST_TAG=$(git tag -l "v$PREFIX.*" --sort=-v:refname | head -n1)
-          
+
           if [ -z "$LATEST_TAG" ]; then
             NEW_VERSION="${PREFIX}.0"
           else
@@ -38,19 +38,19 @@ jobs:
             CURRENT_N=$(echo $LATEST_TAG | awk -F. '{print $3}')
             NEW_VERSION="${PREFIX}.$((CURRENT_N + 1))"
           fi
-          
+
           echo "Setting version to: $NEW_VERSION"
           echo "VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          
+
           # Update pyproject.toml version
           uv version "$NEW_VERSION"
-          
+
       - name: Build package
         run: uv build
-      
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        
+
       - name: Push version tag
         run: |
           git config user.name "github-actions[bot]"
