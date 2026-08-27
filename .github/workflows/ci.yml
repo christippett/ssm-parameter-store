@@ -20,8 +20,3 @@ jobs:
         env:
           AWS_DEFAULT_REGION: us-east-1
         run: uv run --frozen pytest --cov=ssm_parameter_store --cov-report=lcov
-      - name: Upload coverage data to coveralls.io
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.lcov
