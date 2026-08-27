@@ -44,7 +44,7 @@ class EC2ParameterStore:
         return dict([self.extract_parameter(p, strip_path=strip_path)])
 
     def get_parameters(self, names, decrypt=True, strip_path=True):
-        get_kwargs = dict(Names=names, WithDecryption=decrypt)
+        get_kwargs = {'Names': names, 'WithDecryption': decrypt}
         return self._get_paginated_parameters(
             client_method=self.client.get_parameters,
             strip_path=strip_path,
@@ -52,7 +52,7 @@ class EC2ParameterStore:
         )
 
     def get_parameters_by_path(self, path, decrypt=True, recursive=True, strip_path=True):
-        get_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=recursive)
+        get_kwargs = {'Path': path, 'WithDecryption': decrypt, 'Recursive': recursive}
         return self._get_paginated_parameters(
             client_method=self.client.get_parameters_by_path,
             strip_path=strip_path,
@@ -64,7 +64,7 @@ class EC2ParameterStore:
         as a structure of nested dictionaries.
         """
         # Get a flat dictionary
-        get_kwargs = dict(Path=path, WithDecryption=decrypt, Recursive=True)
+        get_kwargs = {'Path': path, 'WithDecryption': decrypt, 'Recursive': True}
         flat = self._get_paginated_parameters(
             client_method=self.client.get_parameters_by_path,
             strip_path=False,

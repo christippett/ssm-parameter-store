@@ -4,6 +4,7 @@
 .coverage
 .coverage.*
 coverage.xml
+coverage.lcov
 .coveralls.yml
 .eggs
 .cache
