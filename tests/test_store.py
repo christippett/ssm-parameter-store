@@ -16,7 +16,7 @@ def fake_ssm():
 def parameter_store(fake_ssm):
     """An SSM parameter store with a well-known set of fake test data"""
     # Load test parameters
-    ssm = boto3.client('ssm')
+    ssm = boto3.client('ssm', region_name="us-east-1")
     ssm.put_parameter(Name='key', Value='hello', Type='SecureString')
     ssm.put_parameter(Name='second-key', Value='world', Type='String')
     ssm.put_parameter(Name='list-key', Value='hello,world', Type='StringList')
@@ -48,7 +48,7 @@ def test_get_paginated_parameters(parameter_store):
     """
     client_kwargs = {'Path': '/test/path/'}
     parameter_keys = parameter_store._get_paginated_parameters(
-        client_method=boto3.client('ssm').get_parameters_by_path,
+        client_method=boto3.client('ssm', region_name="us-east-1").get_parameters_by_path,
         **client_kwargs
     )
     assert len(parameter_keys) == 20
@@ -130,3 +130,16 @@ def test_get_parameters_with_hierarchy_for_path_with_no_nesting(parameter_store)
 def test_get_parameters_with_hierarchy_for_nonexistent_path(parameter_store):
     parameter_keys = parameter_store.get_parameters_with_hierarchy('/does/not/exist', strip_path=True)
     assert len(parameter_keys) == 0
+
+
+def test_create_parameter(parameter_store):
+    parameter_store.put_parameter('/path/to/sixth-key', 'created', 'String')
+    parameter_keys = parameter_store.get_parameters_by_path('/path/to/', recursive=True)
+    assert len(parameter_keys) == 4
+
+
+def test_delete_parameter(parameter_store):
+    parameter_store.delete_parameter('/path/to/third-key')
+    parameter_keys = parameter_store.get_parameters_by_path('/path/to/', recursive=True)
+    assert len(parameter_keys) == 2
+

@@ -87,3 +87,11 @@ class EC2ParameterStore:
             leafdict[key_segments[-1]] = value
 
         return result
+
+    def put_parameter(self, name, value, value_type, **kwargs):
+        if value_type not in ["String", "StringList", "SecureString"]:
+            raise ValueError
+        return self.client.put_parameter(Name=name, Value=value, Type=value_type, **kwargs)
+
+    def delete_parameter(self, name):
+        return self.client.delete_parameter(Name=name)
