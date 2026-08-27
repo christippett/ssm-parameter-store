@@ -1,6 +1,6 @@
 [project]
 name = "ssm-parameter-store"
-version = "26.8.1"
+version = "26.8.2"
 description = "Add your description here"
 readme = "README.md"
 authors = [
