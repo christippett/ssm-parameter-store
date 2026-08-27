@@ -21,10 +21,10 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "coveralls>=4.1.0",
     "moto>=5.2.3",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.16.4",
     "setuptools>=84.0.0",
-    "tox>=4.60.1"
 ]
