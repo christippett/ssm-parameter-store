@@ -1,10 +1,10 @@
 SSM Parameter Store
 =============================================================
 
-[![PyPI version](https://img.shields.io/pypi/v/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
-[![Build status](https://img.shields.io/travis/christippett/ssm-parameter-store.svg)](https://travis-ci.org/christippett/ssm-parameter-store)
+[![PyPI version](https://img.shields.io/pypi/v/ssm-parameter-store.svg)](https://pypi.org/project/ssm-parameter-store/)
+[![Build status](https://img.shields.io/github/actions/workflow/status/christippett/ssm-parameter-store/ci.yml)](https://github.com/christippett/ssm-parameter-store/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/coveralls/github/christippett/ssm-parameter-store.svg)](https://coveralls.io/github/christippett/ssm-parameter-store?branch=master)
-[![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.python.org/pypi/ssm-parameter-store)
+[![Python versions](https://img.shields.io/pypi/pyversions/ssm-parameter-store.svg)](https://pypi.org/project/ssm-parameter-store/)
 [![Github license](https://img.shields.io/github/license/christippett/ssm-parameter-store.svg)](https://github.com/christippett/ssm-parameter-store)
 
 Description
@@ -220,4 +220,3 @@ Related Projects
 Python module to store secrets in secret stores
 - **[ssm-cache](https://github.com/alexcasalboni/ssm-cache-python)** –
 AWS System Manager Parameter Store caching client for Python
-
